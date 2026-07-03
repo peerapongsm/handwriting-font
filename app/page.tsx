@@ -81,6 +81,7 @@ export default function HomePage() {
                   className={`btn btn-pen${penWidth === w ? " active" : ""}`}
                   onClick={() => setPenWidth(w)}
                 >
+                  <span className="pen-dot" style={{ width: w / 2, height: w / 2 }} />
                   {PEN_LABELS[i]}
                 </button>
               ))}

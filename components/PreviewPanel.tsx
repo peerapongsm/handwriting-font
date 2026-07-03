@@ -84,7 +84,7 @@ export default function PreviewPanel({ fontBytes, familyName }: Props) {
       <div className="pangram-preview" style={status === "ready" ? { fontFamily: `"${familyName}"` } : undefined}>
         {previewText}
       </div>
-      <button type="button" className="btn btn-primary" disabled={status !== "ready"} onClick={handleDownload}>
+      <button type="button" className="btn-seal" disabled={status !== "ready"} onClick={handleDownload}>
         ดาวน์โหลด .ttf
       </button>
     </div>

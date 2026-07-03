@@ -40,17 +40,30 @@ export default function DrawingCanvas({ charDef, strokes, penWidth, onStrokesCha
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawingRef = useRef<Point[] | null>(null);
 
-  function drawLine(ctx: CanvasRenderingContext2D, fontY: number, color: string) {
+  function drawLine(
+    ctx: CanvasRenderingContext2D,
+    fontY: number,
+    color: string,
+    dash: number[],
+    label: string,
+  ) {
     const a = fontToCanvas({ x: CELL_LEFT, y: fontY });
     const b = fontToCanvas({ x: CELL_RIGHT, y: fontY });
     ctx.save();
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = dash.length === 0 ? 1.2 : 1;
+    ctx.setLineDash(dash);
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
     ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    ctx.font = '9px "Sarabun", sans-serif';
+    ctx.fillStyle = color;
+    ctx.textBaseline = "bottom";
+    ctx.fillText(label, a.x + 2, a.y - 2);
     ctx.restore();
   }
 
@@ -58,7 +71,7 @@ export default function DrawingCanvas({ charDef, strokes, penWidth, onStrokesCha
     const top = fontToCanvas({ x: CELL_LEFT, y: toY });
     const bottom = fontToCanvas({ x: CELL_RIGHT, y: fromY });
     ctx.save();
-    ctx.fillStyle = "rgba(250, 204, 21, 0.15)";
+    ctx.fillStyle = "rgba(198, 156, 74, 0.16)";
     ctx.fillRect(top.x, top.y, bottom.x - top.x, bottom.y - top.y);
     ctx.restore();
   }
@@ -68,12 +81,12 @@ export default function DrawingCanvas({ charDef, strokes, penWidth, onStrokesCha
     ctx.lineWidth = Math.max(1, width * SCALE);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.strokeStyle = "#0f172a";
+    ctx.strokeStyle = "#1c2747";
     ctx.beginPath();
     const first = fontToCanvas(points[0]);
     if (points.length === 1) {
       ctx.arc(first.x, first.y, ctx.lineWidth / 2, 0, Math.PI * 2);
-      ctx.fillStyle = "#0f172a";
+      ctx.fillStyle = "#1c2747";
       ctx.fill();
       return;
     }
@@ -91,13 +104,13 @@ export default function DrawingCanvas({ charDef, strokes, penWidth, onStrokesCha
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#f8fafc";
+    ctx.fillStyle = "#fffdf7";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // faint reference character, as a drawing aid — never part of the exported glyph
     ctx.save();
-    ctx.globalAlpha = 0.14;
-    ctx.fillStyle = "#000";
+    ctx.globalAlpha = 0.16;
+    ctx.fillStyle = "#2b3a67";
     ctx.font = `${Math.round((X_HEIGHT - DESCENDER) * SCALE)}px "Noto Sans Thai", sans-serif`;
     ctx.textBaseline = "alphabetic";
     const basePt = fontToCanvas({ x: 60, y: BASELINE });
@@ -110,10 +123,10 @@ export default function DrawingCanvas({ charDef, strokes, penWidth, onStrokesCha
       drawZoneBand(ctx, BELOW_ZONE.bottom, BELOW_ZONE.top);
     }
 
-    drawLine(ctx, ASCENDER, "#7dd3fc");
-    drawLine(ctx, X_HEIGHT, "#a5b4fc");
-    drawLine(ctx, BASELINE, "#f87171");
-    drawLine(ctx, DESCENDER, "#7dd3fc");
+    drawLine(ctx, ASCENDER, "#9aa5c4", [1, 3], "เส้นบน");
+    drawLine(ctx, X_HEIGHT, "#6b7ba8", [5, 3], "x-height");
+    drawLine(ctx, BASELINE, "#2b3a67", [], "เส้นฐาน");
+    drawLine(ctx, DESCENDER, "#9aa5c4", [1, 3], "เส้นล่าง");
 
     for (const s of strokes) paintStroke(ctx, s.points, s.width);
     if (drawingRef.current) paintStroke(ctx, drawingRef.current, penWidth);
