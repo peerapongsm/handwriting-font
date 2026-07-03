@@ -59,61 +59,63 @@ export default function HomePage() {
       </header>
 
       <main className="app-main">
-        <GlyphPicker
-          activeGroup={activeGroup}
-          onGroupChange={setActiveGroup}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          isDrawn={isDrawn}
-        />
-
-        <section className="draw-section">
-          <div className="draw-toolbar">
-            <span className="current-char-label">
-              กำลังวาด: <strong>{selectedChar.char}</strong>
-              {selectedChar.combining && <span className="combining-badge">สระ/วรรณยุกต์ · advance 0</span>}
-            </span>
-            <div className="pen-widths">
-              {PEN_WIDTHS.map((w, i) => (
-                <button
-                  key={w}
-                  type="button"
-                  className={`btn btn-pen${penWidth === w ? " active" : ""}`}
-                  onClick={() => setPenWidth(w)}
-                >
-                  <span className="pen-dot" style={{ width: w / 2, height: w / 2 }} />
-                  {PEN_LABELS[i]}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <DrawingCanvas
-            charDef={selectedChar}
-            strokes={currentStrokes}
-            penWidth={penWidth}
-            onStrokesChange={handleStrokesChange}
+        <div className="workspace-editor">
+          <GlyphPicker
+            activeGroup={activeGroup}
+            onGroupChange={setActiveGroup}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            isDrawn={isDrawn}
           />
 
-          <div className="draw-actions">
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => handleStrokesChange(currentStrokes.slice(0, -1))}
-              disabled={currentStrokes.length === 0}
-            >
-              ↶ ย้อนเส้นล่าสุด
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => handleStrokesChange([])}
-              disabled={currentStrokes.length === 0}
-            >
-              ล้างตัวนี้
-            </button>
-          </div>
-        </section>
+          <section className="draw-section">
+            <div className="draw-toolbar">
+              <span className="current-char-label">
+                กำลังวาด: <strong>{selectedChar.char}</strong>
+                {selectedChar.combining && <span className="combining-badge">สระ/วรรณยุกต์ · advance 0</span>}
+              </span>
+              <div className="pen-widths">
+                {PEN_WIDTHS.map((w, i) => (
+                  <button
+                    key={w}
+                    type="button"
+                    className={`btn btn-pen${penWidth === w ? " active" : ""}`}
+                    onClick={() => setPenWidth(w)}
+                  >
+                    <span className="pen-dot" style={{ width: w / 2, height: w / 2 }} />
+                    {PEN_LABELS[i]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <DrawingCanvas
+              charDef={selectedChar}
+              strokes={currentStrokes}
+              penWidth={penWidth}
+              onStrokesChange={handleStrokesChange}
+            />
+
+            <div className="draw-actions">
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => handleStrokesChange(currentStrokes.slice(0, -1))}
+                disabled={currentStrokes.length === 0}
+              >
+                ↶ ย้อนเส้นล่าสุด
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => handleStrokesChange([])}
+                disabled={currentStrokes.length === 0}
+              >
+                ล้างตัวนี้
+              </button>
+            </div>
+          </section>
+        </div>
 
         <PreviewPanel fontBytes={fontBytes} familyName={FAMILY_NAME} />
       </main>

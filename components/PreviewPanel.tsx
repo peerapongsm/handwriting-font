@@ -15,6 +15,7 @@ type Status = "idle" | "loading" | "ready" | "error";
 export default function PreviewPanel({ fontBytes, familyName }: Props) {
   const [pangram, setPangram] = useState(DEFAULT_PANGRAM);
   const [status, setStatus] = useState<Status>("idle");
+  const [expanded, setExpanded] = useState(false);
   const loadedFaceRef = useRef<FontFace | null>(null);
 
   useEffect(() => {
@@ -72,8 +73,17 @@ export default function PreviewPanel({ fontBytes, familyName }: Props) {
           : "วาดตัวอักษรอย่างน้อย 1 ตัวเพื่อดูพรีวิว";
 
   return (
-    <div className="preview-panel" data-preview-status={status}>
-      <h2>พรีวิว — พิมพ์อะไรก็ได้ด้วยฟอนต์ของคุณเอง</h2>
+    <div className={`preview-panel${expanded ? " expanded" : ""}`} data-preview-status={status}>
+      <div className="preview-panel-head">
+        <h2>พรีวิว — พิมพ์อะไรก็ได้ด้วยฟอนต์ของคุณเอง</h2>
+        <button
+          type="button"
+          className="btn btn-outline preview-toggle"
+          onClick={() => setExpanded((v) => !v)}
+        >
+          {expanded ? "ย่อ ▾" : "แก้ไข ▴"}
+        </button>
+      </div>
       <textarea
         className="pangram-input"
         value={pangram}
