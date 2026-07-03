@@ -1,0 +1,8 @@
+node_modules
+out
+.next
+memory.md
+.superpowers
+*.tsbuildinfo
+*.local
+.DS_Store
